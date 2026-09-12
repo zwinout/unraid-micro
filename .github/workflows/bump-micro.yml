@@ -1,0 +1,66 @@
+name: Track upstream micro releases
+
+# Re-pins the plugin whenever micro publishes a new release.
+#
+# Nothing is pinned unless the checksum is corroborated from three independent
+# sources (the GitHub API asset digest, micro's own published .sha file, and a
+# local re-hash of the downloaded bytes), and the plugin's install/remove test
+# suite has to pass before anything is committed. If the tests fail,
+# tools/bump_micro.py restores micro.plg and the job stops.
+
+on:
+  schedule:
+    - cron: "23 6 * * *"   # daily at 06:23 UTC
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: "Report only, do not commit"
+        type: boolean
+        default: false
+
+permissions:
+  contents: write
+
+concurrency:
+  group: bump-micro
+  cancel-in-progress: false
+
+jobs:
+  bump:
+    name: Re-pin if upstream moved
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Is a newer micro release available?
+        id: check
+        run: |
+          set +e
+          python3 tools/bump_micro.py --check
+          rc=$?
+          set -e
+          case "$rc" in
+            0) echo "available=false" >> "$GITHUB_OUTPUT" ;;
+            3) echo "available=true"  >> "$GITHUB_OUTPUT" ;;
+            *) echo "::error::bump_micro.py --check failed (exit $rc)"; exit "$rc" ;;
+          esac
+
+      - name: Already current
+        if: steps.check.outputs.available == 'false'
+        run: echo "Pinned to the newest micro release; nothing to do."
+
+      - name: Set commit identity
+        if: steps.check.outputs.available == 'true' && github.event.inputs.dry_run != 'true'
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+      - name: Re-pin, run the test suite, commit and push
+        if: steps.check.outputs.available == 'true' && github.event.inputs.dry_run != 'true'
+        run: python3 tools/bump_micro.py --write --push

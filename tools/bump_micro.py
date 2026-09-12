@@ -17,6 +17,7 @@ A pin that cannot be verified from both sources is never written.
 
 Usage:
     python3 tools/bump_micro.py              # show what would change
+    python3 tools/bump_micro.py --check      # exit 0 if current, 3 if a newer release exists
     python3 tools/bump_micro.py --write      # apply, then test
     python3 tools/bump_micro.py --write --push
 """
@@ -98,6 +99,11 @@ def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--write", action="store_true", help="apply the change to micro.plg")
     ap.add_argument("--push", action="store_true", help="commit and push after testing")
+    ap.add_argument(
+        "--check",
+        action="store_true",
+        help="exit 0 if already pinned to the newest release, 3 if a newer one exists",
+    )
     args = ap.parse_args()
 
     text = PLG.read_text(encoding="utf-8")
@@ -147,7 +153,18 @@ def main() -> int:
         return 1
     print("  checksum corroborated by API digest, .sha file and a local re-hash.")
 
-    if new_ver == cur_ver and new_sha == cur_sha:
+    up_to_date = new_ver == cur_ver and new_sha == cur_sha
+
+    if args.check:
+        # Distinct exit codes so CI can branch on the result without parsing
+        # stdout.
+        if up_to_date:
+            print(f"\nCHECK: already pinned to the newest release (micro {cur_ver})")
+            return 0
+        print(f"\nCHECK: micro {new_ver} is available (currently pinned: {cur_ver})")
+        return 3
+
+    if up_to_date:
         print(f"\nAlready pinned to the newest release (micro {cur_ver}). Nothing to do.")
         return 0
 

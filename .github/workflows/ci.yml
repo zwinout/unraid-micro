@@ -1,0 +1,30 @@
+name: Plugin tests
+
+# Runs the plugin's install/remove test suite. This is the same suite the
+# release workflow requires before it will re-pin a new micro version, so a
+# change that would break an install fails here first.
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    name: Validate micro.plg
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Run the plugin test suite
+        run: python3 tools/validate_plugin.py

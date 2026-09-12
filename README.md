@@ -104,10 +104,20 @@ prepends a `<CHANGES>` entry, re-runs the install/remove test suite, and only
 then commits and pushes. It refuses to pin anything it could not download and
 verify.
 
-If you want this to happen without anyone remembering to run it, the repository
-can carry a scheduled GitHub Actions workflow that runs the same script weekly —
-that needs the `workflow` scope on the pushing token, which the current one does
-not have.
+If you want this to happen without anyone remembering to run it, it already
+does: this repository carries a scheduled GitHub Actions workflow
+([`.github/workflows/bump-micro.yml`](.github/workflows/bump-micro.yml)) that
+runs `tools/bump_micro.py` daily, and only commits when the checksum has been
+corroborated and the test suite passes. It can also be run by hand from the
+Actions tab, with a "report only" option.
+
+The accompanying [`ci.yml`](.github/workflows/ci.yml) runs the test suite on
+every push, so a change that would break an install fails there rather than on
+someone's server.
+
+One GitHub caveat worth knowing: scheduled workflows are disabled automatically
+after 60 days without repository activity. If micro goes quiet for two months,
+re-enable the workflow from the Actions tab.
 
 ## Uninstall
 
