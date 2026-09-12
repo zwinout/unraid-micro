@@ -3,13 +3,13 @@
 <!DOCTYPE PLUGIN [
   <!ENTITY name       "micro">
   <!ENTITY author     "zwinout">
-  <!ENTITY version    "2026.09.12">
+  <!ENTITY version    "2026.09.12.1">
   <!ENTITY microver   "2.0.15">
   <!ENTITY microsha   "267d238eac1e26ed053d13d4d48bd421b87f9eb538b604f0b2f74a85598b6cc2">
   <!ENTITY gitURL     "https://github.com/zwinout/unraid-micro">
   <!ENTITY rawURL     "https://raw.githubusercontent.com/zwinout/unraid-micro/main">
   <!ENTITY pluginURL  "&rawURL;/micro.plg">
-  <!ENTITY supportURL "https://forums.unraid.net/topic/YOUR_SUPPORT_TOPIC_ID-micro-terminal-text-editor/">
+  <!ENTITY supportURL "https://github.com/zwinout/unraid-micro/issues">
   <!ENTITY releaseDIR "https://github.com/micro-editor/micro/releases/download/v&microver;">
 ]>
 
@@ -30,6 +30,9 @@ Installs micro, a modern and intuitive terminal-based text editor, so it is avai
 </DESCRIPTION>
 
 <CHANGES>
+2026.09.12.1
+- Support link now points at the issue tracker instead of a forum topic
+
 2026.09.12
 - Initial release
 - Installs micro 2.0.15 (upstream statically linked linux64 build) to /usr/local/bin/micro

@@ -6,7 +6,7 @@ Unraid gives you `vi` and nothing friendlier — editing a User Script, a config
 
 The plugin installs one specific micro release together with its SHA256, verifies the archive against micro's published checksum before installing anything, caches the verified archive on the flash drive so reinstalls work even if GitHub is unreachable, and keeps your settings, keybindings and Lua plugins on the flash drive so they survive a reboot. There is no daemon, and no network access after installation.
 
-Maintained by zwinout. Bug reports and feature requests are welcome in the support thread or on GitHub.
+Maintained by zwinout. Bug reports and feature requests are welcome in the issue tracker.
   </Profile>
 
   <!-- Repository icon -->
@@ -15,6 +15,6 @@ Maintained by zwinout. Bug reports and feature requests are welcome in the suppo
   <!-- Repository home -->
   <WebPage>https://github.com/zwinout/unraid-micro</WebPage>
 
-  <!-- Support thread -->
-  <Forum>https://forums.unraid.net/topic/YOUR_SUPPORT_TOPIC_ID-micro-terminal-text-editor/</Forum>
+  <!-- Support -->
+  <Forum>https://github.com/zwinout/unraid-micro/issues</Forum>
 </CommunityApplications>

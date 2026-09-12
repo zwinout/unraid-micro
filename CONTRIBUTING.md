@@ -119,12 +119,17 @@ Submission requirements, all checked by a human reviewer:
 - An icon of at least 256x256. `icon.png` is rendered from micro's own `micro.svg`, taken
   from the release tarball; the artwork is unmodified, only the Inkscape editor metadata
   is stripped when re-emitting it.
-- A **forum support thread**, which must exist before submitting. Until the topic id is
-  known, `<Support>` in `micro.plg`, `plugins/micro.xml` and `ca_profile.xml` holds
-  `YOUR_SUPPORT_TOPIC_ID`. After creating the thread, replace it in all three files (and
-  add the link to the README's Support section) and push. The test suite reports this as
-  `[WAIT]` rather than a failure, but CA will not accept the submission while it is
-  unresolved.
+- A **support link**. `<Support>` (in `micro.plg` and `plugins/micro.xml`) and `<Forum>`
+  in `ca_profile.xml` point at this repository's issue tracker. The CA field reference
+  accepts that — it describes `<Support>` as a URL "for forums, issues, or project help".
+  CA's *listing requirements* nevertheless describe a forum support thread for plugins,
+  so a reviewer may ask for one. If that happens: create a thread in the Unraid **Plugin
+  Support** subforum, repoint `<Support>` in `micro.plg`, `plugins/micro.xml` and
+  `ca_profile.xml`, and add the link to the README's Support section.
+- **No starter placeholder values** anywhere in the shipped templates. The suite's section
+  6 mirrors CA's "Starter defaults removed" check, scanning `micro.plg`, `ca_profile.xml`
+  and `plugins/*.xml` for the starter repo's placeholder strings, and reports anything it
+  finds as a pending item with a summary line.
 
 Then submit through the Community Applications flow, and expect questions about the
 SHA256 pinning and the flash-drive config redirect — both are documented in the README's
