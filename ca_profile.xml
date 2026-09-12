@@ -1,0 +1,20 @@
+<CommunityApplications>
+  <Profile>
+Micro for Unraid installs [micro](https://micro-editor.github.io/), a modern and intuitive terminal-based text editor, so it is available in the Unraid web terminal and over SSH.
+
+Edit anything on the server without fighting `vi`: config files under `/boot`, a User Script, a compose file on a share. Upstream micro ships as a single statically linked binary with no dependencies, includes syntax highlighting for 100+ languages, mouse support, multiple cursors and a Lua plugin manager, and follows the familiar Ctrl+S / Ctrl+Q / Ctrl+C / Ctrl+V keybindings.
+
+The plugin verifies the upstream release archive against its published SHA256 before installing, caches that verified archive on the flash drive so reinstalls work even if GitHub is unreachable, and keeps micro's settings and plugins on the flash drive so they survive a reboot.
+
+Maintained by oliverb4ry. Questions, bug reports and feature requests are welcome in the support thread or on GitHub.
+  </Profile>
+
+  <!-- Repository icon -->
+  <Icon>https://raw.githubusercontent.com/YOUR_GITHUB_USERNAME/unraid-micro/main/icon.png</Icon>
+
+  <!-- Repository home -->
+  <WebPage>https://github.com/YOUR_GITHUB_USERNAME/unraid-micro</WebPage>
+
+  <!-- Support thread -->
+  <Forum>https://forums.unraid.net/topic/YOUR_SUPPORT_TOPIC_ID-micro-terminal-text-editor/</Forum>
+</CommunityApplications>

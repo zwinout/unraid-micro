@@ -1,0 +1,26 @@
+<Plugin>
+  <!-- Community Applications wrapper for the micro plugin manifest.
+       PluginURL must match the pluginURL attribute in micro.plg exactly. -->
+
+  <Name>Micro</Name>
+
+  <Overview>Installs micro, a modern and intuitive terminal-based text editor, for use in the Unraid web terminal and over SSH.</Overview>
+
+  <PluginURL>https://raw.githubusercontent.com/YOUR_GITHUB_USERNAME/unraid-micro/main/micro.plg</PluginURL>
+
+  <PluginAuthor>oliverb4ry</PluginAuthor>
+
+  <Support>https://forums.unraid.net/topic/YOUR_SUPPORT_TOPIC_ID-micro-terminal-text-editor/</Support>
+
+  <Project>https://github.com/YOUR_GITHUB_USERNAME/unraid-micro</Project>
+
+  <ReadMe>https://raw.githubusercontent.com/YOUR_GITHUB_USERNAME/unraid-micro/main/README.md</ReadMe>
+
+  <Category>Tools:Utilities</Category>
+
+  <Icon>https://raw.githubusercontent.com/YOUR_GITHUB_USERNAME/unraid-micro/main/icon.png</Icon>
+
+  <License>MIT</License>
+
+  <MinVer>6.12.0</MinVer>
+</Plugin>

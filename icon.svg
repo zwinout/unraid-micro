@@ -1,0 +1,47 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" width="256" height="256" role="img" aria-labelledby="title desc">
+  <title id="title">micro for Unraid</title>
+  <desc id="desc">A terminal window with a green shell prompt above the wordmark micro.</desc>
+
+  <defs>
+    <linearGradient id="tile" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#25388f"/>
+      <stop offset="100%" stop-color="#121a4a"/>
+    </linearGradient>
+    <radialGradient id="glow" cx="0.18" cy="0.08" r="0.85">
+      <stop offset="0%" stop-color="#ffffff" stop-opacity="0.20"/>
+      <stop offset="100%" stop-color="#ffffff" stop-opacity="0"/>
+    </radialGradient>
+    <clipPath id="tileClip">
+      <rect x="0" y="0" width="256" height="256" rx="52" ry="52"/>
+    </clipPath>
+  </defs>
+
+  <g clip-path="url(#tileClip)">
+    <rect x="0" y="0" width="256" height="256" fill="url(#tile)"/>
+    <rect x="0" y="0" width="256" height="256" fill="url(#glow)"/>
+
+    <!-- terminal window -->
+    <rect x="36" y="27" width="184" height="128" rx="16" ry="16"
+          fill="#0b102a" fill-opacity="0.80" stroke="#7c90cd" stroke-opacity="0.53" stroke-width="2"/>
+    <line x1="36" y1="59" x2="220" y2="59" stroke="#7c90cd" stroke-opacity="0.37" stroke-width="2"/>
+
+    <!-- window controls -->
+    <circle cx="59" cy="45" r="7" fill="#ff6b6b"/>
+    <circle cx="84" cy="45" r="7" fill="#ffca57"/>
+    <circle cx="109" cy="45" r="7" fill="#4ade80"/>
+
+    <!-- prompt -->
+    <polyline points="67,87 85,105 67,123" fill="none" stroke="#4ade80"
+              stroke-width="11" stroke-linejoin="round"/>
+    <rect x="92" y="118" width="46" height="9" rx="3" ry="3" fill="#4ade80"/>
+
+    <!-- wordmark -->
+    <text x="128" y="217" text-anchor="middle" fill="#f5f7fa"
+          font-family="DejaVu Sans, Verdana, Segoe UI, Helvetica, Arial, sans-serif"
+          font-size="50" font-weight="bold">micro</text>
+
+    <!-- rim, keeps the tile readable on dark backgrounds -->
+    <rect x="1" y="1" width="254" height="254" rx="51" ry="51"
+          fill="none" stroke="#ffffff" stroke-opacity="0.18" stroke-width="2"/>
+  </g>
+</svg>
