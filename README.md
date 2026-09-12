@@ -62,16 +62,52 @@ If your shell sets `XDG_CONFIG_HOME`, micro will prefer `$XDG_CONFIG_HOME/micro`
 ## How it works
 
 1. Unraid downloads the upstream release archive once to `/boot/config/plugins/micro/` (declared as a `<FILE>` in `micro.plg`).
-2. On install and on every boot, the installer verifies that archive against micro's published SHA256 for `2.0.15`. A mismatch aborts the install and deletes the bad archive.
+2. On install and on every boot, the installer verifies that archive against micro's published SHA256 for the bundled release. A mismatch aborts the install and deletes the bad archive.
 3. If the archive is missing or fails verification, the installer downloads it itself via `curl` (falling back to `wget`) and re-verifies. If that also fails, nothing is installed rather than something unverified.
 4. The binary is extracted to `/usr/local/bin/micro` and the man page to `/usr/local/share/man/man1/`.
 5. Archives cached by earlier plugin versions are cleaned up.
 
 Nothing runs as a daemon; the plugin is a binary install plus a symlink.
 
-## Update
+## Updating
 
-Plugin versions track the bundled micro release. New releases are picked up by Unraid's normal plugin update check (*Plugins → Check for Updates*). No template changes are required.
+The plugin pins **one micro release** — currently 2.0.15 — together with that
+release's SHA256. It does not fetch "latest" at install time. That is deliberate:
+a pinned version plus a checksum is what makes the install reproducible and lets
+the plugin refuse to install a binary it cannot verify.
+
+Two different updates follow from that:
+
+**Updating the plugin** works the way any Unraid plugin does. *Plugins → Check
+for Updates* compares the `version` attribute of `micro.plg`; a newer one is
+offered for install. Community Apps picks up plugin version bumps automatically,
+so no template change is ever needed — see *Updating Your Plugin* in the
+[CA docs](https://plugin-docs.mstrhakr.com/docs/distribution/community-applications.html).
+
+**Updating micro itself** is a maintainer action, not something the plugin does
+on your server. A new upstream micro release reaches you only when the plugin's
+version is bumped to pin it, so the plugin is never more current than its last
+release. If you are running an older plugin and want a newer micro, check for a
+plugin update first; if there is not one, upstream's release is newer than what
+this plugin pins, and an issue on the repository is the right nudge.
+
+To bump the pin, run the script in the build tooling:
+
+```
+python3 bump_micro.py --push
+```
+
+It asks the GitHub API for micro's latest release, cross-checks the asset's
+SHA256 against the publisher's own `.sha` file, requires the two to agree,
+rewrites the `microver` and `microsha` entities, bumps the plugin version,
+prepends a `<CHANGES>` entry, re-runs the install/remove test suite, and only
+then commits and pushes. It refuses to pin anything it could not download and
+verify.
+
+If you want this to happen without anyone remembering to run it, the repository
+can carry a scheduled GitHub Actions workflow that runs the same script weekly —
+that needs the `workflow` scope on the pushing token, which the current one does
+not have.
 
 ## Uninstall
 

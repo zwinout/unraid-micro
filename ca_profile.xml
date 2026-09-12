@@ -6,7 +6,7 @@ Edit anything on the server without fighting `vi`: config files under `/boot`, a
 
 The plugin verifies the upstream release archive against its published SHA256 before installing, caches that verified archive on the flash drive so reinstalls work even if GitHub is unreachable, and keeps micro's settings and plugins on the flash drive so they survive a reboot.
 
-Maintained by oliverb4ry. Questions, bug reports and feature requests are welcome in the support thread or on GitHub.
+Maintained by zwinout. Questions, bug reports and feature requests are welcome in the support thread or on GitHub.
   </Profile>
 
   <!-- Repository icon -->

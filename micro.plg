@@ -2,7 +2,7 @@
 
 <!DOCTYPE PLUGIN [
   <!ENTITY name       "micro">
-  <!ENTITY author     "oliverb4ry">
+  <!ENTITY author     "zwinout">
   <!ENTITY version    "2026.09.12">
   <!ENTITY microver   "2.0.15">
   <!ENTITY microsha   "267d238eac1e26ed053d13d4d48bd421b87f9eb538b604f0b2f74a85598b6cc2">
