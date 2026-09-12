@@ -19,7 +19,7 @@ It ships upstream as a single statically linked binary with no runtime dependenc
 Search for **Micro** in *Apps*, or install from the Unraid Web UI: *Plugins → Install Plugin* and paste
 
 ```
-https://raw.githubusercontent.com/YOUR_GITHUB_USERNAME/unraid-micro/main/micro.plg
+https://raw.githubusercontent.com/zwinout/unraid-micro/main/micro.plg
 ```
 
 ## Usage

@@ -6,8 +6,8 @@
   <!ENTITY version    "2026.09.12">
   <!ENTITY microver   "2.0.15">
   <!ENTITY microsha   "267d238eac1e26ed053d13d4d48bd421b87f9eb538b604f0b2f74a85598b6cc2">
-  <!ENTITY gitURL     "https://github.com/YOUR_GITHUB_USERNAME/unraid-micro">
-  <!ENTITY rawURL     "https://raw.githubusercontent.com/YOUR_GITHUB_USERNAME/unraid-micro/main">
+  <!ENTITY gitURL     "https://github.com/zwinout/unraid-micro">
+  <!ENTITY rawURL     "https://raw.githubusercontent.com/zwinout/unraid-micro/main">
   <!ENTITY pluginURL  "&rawURL;/micro.plg">
   <!ENTITY supportURL "https://forums.unraid.net/topic/YOUR_SUPPORT_TOPIC_ID-micro-terminal-text-editor/">
   <!ENTITY releaseDIR "https://github.com/micro-editor/micro/releases/download/v&microver;">

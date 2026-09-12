@@ -10,10 +10,10 @@ Maintained by oliverb4ry. Questions, bug reports and feature requests are welcom
   </Profile>
 
   <!-- Repository icon -->
-  <Icon>https://raw.githubusercontent.com/YOUR_GITHUB_USERNAME/unraid-micro/main/icon.png</Icon>
+  <Icon>https://raw.githubusercontent.com/zwinout/unraid-micro/main/icon.png</Icon>
 
   <!-- Repository home -->
-  <WebPage>https://github.com/YOUR_GITHUB_USERNAME/unraid-micro</WebPage>
+  <WebPage>https://github.com/zwinout/unraid-micro</WebPage>
 
   <!-- Support thread -->
   <Forum>https://forums.unraid.net/topic/YOUR_SUPPORT_TOPIC_ID-micro-terminal-text-editor/</Forum>
