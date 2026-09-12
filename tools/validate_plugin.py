@@ -52,6 +52,11 @@ LITERAL_RE = re.compile(
     r"(?<![\w$])/(?:usr|boot|root|tmp|etc|var|bin|sbin|opt|mnt|home|srv)/[\w./-]*"
 )
 
+# The README quotes the bundled micro version. If it drifts from the pin, a user
+# reading the README is told the wrong thing, so it is checked rather than
+# trusted.
+BUNDLED_RE = re.compile(r"Currently bundles \*\*micro (\d+\.\d+\.\d+)\*\*")
+
 results: list[tuple[bool, str]] = []
 
 
@@ -123,7 +128,7 @@ def expand(src: str) -> str:
     return out
 
 
-def validate_expansion(expanded: str, tarball: str) -> None:
+def validate_expansion(expanded: str, tarball: str) -> dict:
     print("\n== 2. entity expansion ==")
     root = re.search(r"<PLUGIN\s(.*?)>", expanded, re.S).group(1)
     attrs = dict(re.findall(r'(\w+)="([^"]*)"', root))
@@ -165,6 +170,7 @@ def validate_expansion(expanded: str, tarball: str) -> None:
         "cached archive path expands to the expected filename",
         cached[0]["Name"] if cached else "none",
     )
+    return attrs
 
 
 def extract_scripts(expanded: str) -> dict[str, str]:
@@ -365,6 +371,58 @@ def test_remove(scripts: dict[str, str]) -> None:
     shutil.rmtree(root, ignore_errors=True)
 
 
+def validate_docs(install_url: str, micro_version: str) -> None:
+    """The README is the public face of the repo; check it against the manifest."""
+    print("\n== 5. documentation consistency ==")
+    readme_path = REPO / "README.md"
+    if not check(readme_path.is_file(), "README.md exists"):
+        return
+    readme = readme_path.read_text(encoding="utf-8")
+
+    bundled = BUNDLED_RE.search(readme)
+    check(bool(bundled), "README states which micro release is bundled")
+    if bundled:
+        check(
+            bundled.group(1) == micro_version,
+            "README's bundled version matches the pinned version",
+            f"README says {bundled.group(1)}, micro.plg pins {micro_version}",
+        )
+
+    check(
+        install_url in readme,
+        "README's manual install URL matches the .plg's pluginURL",
+        install_url,
+    )
+    check(
+        "CONTRIBUTING.md" in readme,
+        "README points contributors at CONTRIBUTING.md",
+    )
+    check(
+        "YOUR_SUPPORT_TOPIC_ID" not in readme,
+        "no placeholder leaked into the public README",
+    )
+
+    # Catch a repo rename: the URL Unraid installs from must match where the repo
+    # actually lives, not just agree with itself.
+    try:
+        remote = subprocess.run(
+            ["git", "-C", str(REPO), "config", "--get", "remote.origin.url"],
+            capture_output=True, text=True, timeout=30,
+        ).stdout.strip()
+    except Exception:  # noqa: BLE001
+        remote = ""
+    if remote:
+        slug = re.sub(r"^.*github\.com[:/]", "", remote).removesuffix(".git")
+        expected = f"https://raw.githubusercontent.com/{slug}/main/micro.plg"
+        check(
+            install_url == expected,
+            "pluginURL matches the repository's real origin",
+            f"expected {expected}, .plg says {install_url}",
+        )
+    else:
+        print("       (no git origin available - skipped the rename check)")
+
+
 def main() -> int:
     src = load()
     version = entity(src, "microver")
@@ -381,13 +439,14 @@ def main() -> int:
 
     validate_xml(src)
     expanded = expand(src)
-    validate_expansion(expanded, tarball)
+    attrs = validate_expansion(expanded, tarball)
     scripts = extract_scripts(expanded)
     check(
         set(scripts) == {"install", "remove"},
         "install + remove scripts extracted",
         str(sorted(scripts)),
     )
+    validate_docs(attrs.get("pluginURL", ""), version)
 
     CACHE.mkdir(parents=True, exist_ok=True)
     if not (CACHE / tarball).exists():

@@ -36,7 +36,12 @@ import urllib.request
 
 REPO = pathlib.Path(__file__).resolve().parent.parent
 PLG = REPO / "micro.plg"
+README = REPO / "README.md"
 HARNESS = REPO / "tools" / "validate_plugin.py"
+
+# The README quotes the bundled version. Keep the phrasing stable: the test
+# suite fails if it disagrees with the .plg, so drift cannot ship silently.
+BUNDLED_RE = re.compile(r"(Currently bundles \*\*micro )(\d+\.\d+\.\d+)(\*\*)")
 
 UPSTREAM = "micro-editor/micro"
 PLATFORM = "linux64-static"
@@ -92,6 +97,16 @@ def prepend_changes(text: str, plugin_version: str, micro_version: str) -> str:
     new, n = re.subn(r"<CHANGES>\n", f"<CHANGES>\n{entry}", text, count=1)
     if n != 1:
         raise SystemExit("could not find the <CHANGES> block to prepend to")
+    return new
+
+
+def set_readme_version(text: str, micro_version: str) -> str:
+    """Keep the version quoted in the README in step with the pin."""
+    new, n = BUNDLED_RE.subn(rf"\g<1>{micro_version}\g<3>", text, count=1)
+    if n != 1:
+        raise SystemExit(
+            'could not find the "Currently bundles **micro X.Y.Z**" line in README.md'
+        )
     return new
 
 
@@ -187,6 +202,10 @@ def main() -> int:
     PLG.write_text(text, encoding="utf-8")
     print(f"\nwrote {PLG}")
 
+    readme = README.read_text(encoding="utf-8")
+    README.write_text(set_readme_version(readme, new_ver), encoding="utf-8")
+    print(f"updated the bundled-version line in {README}")
+
     # The cached tarball from the previous pin must not be reused by the tests.
     cache = pathlib.Path("/tmp/micro-plugin-test-cache")
     if cache.exists():
@@ -198,8 +217,10 @@ def main() -> int:
     print("\nrunning the plugin test suite ...")
     rc = subprocess.run([sys.executable, str(HARNESS)]).returncode
     if rc != 0:
-        print("ERROR: the test suite failed - reverting micro.plg")
-        subprocess.run(["git", "-C", str(REPO), "checkout", "--", "micro.plg"])
+        print("ERROR: the test suite failed - reverting the changed files")
+        subprocess.run(
+            ["git", "-C", str(REPO), "checkout", "--", "micro.plg", "README.md"]
+        )
         return 1
 
     if args.push:
