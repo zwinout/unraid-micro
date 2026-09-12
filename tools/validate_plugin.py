@@ -150,13 +150,9 @@ def validate_expansion(expanded: str, tarball: str) -> dict:
     )
 
     supp = attrs.get("support", "")
-    if "YOUR_" in supp:
-        print("       [WAIT] <Support> still holds a placeholder:")
-        print(f"              {supp}")
-        print("              Fill it in once the forum thread exists - Community")
-        print("              Apps will not accept the plugin until it resolves.")
-    else:
-        check(bool(supp), "support link points at a real forum thread", supp)
+    check(bool(supp), "PLUGIN declares a support URL")
+    # Whether it still holds a starter placeholder is reported in section 6,
+    # which mirrors what the Community Applications scan looks for.
 
     files = re.findall(r"<FILE\s+([^>]*)>", expanded)
     entries = [dict(re.findall(r'(\w+)="([^"]*)"', f)) for f in files]
@@ -423,6 +419,57 @@ def validate_docs(install_url: str, micro_version: str) -> None:
         print("       (no git origin available - skipped the rename check)")
 
 
+# Starter-repo placeholder values. The Community Applications scan reports these
+# as "Starter defaults removed: Starter placeholder values are still present", so
+# the suite looks for the same strings in the same files rather than letting a
+# submittable-looking repo sail through.
+STARTER_MARKERS = [
+    "YOUR_GITHUB_USERNAME",
+    "YOUR_SUPPORT_TOPIC",
+    "YOUR_DISCORD",
+    "YOUR_INVITE_CODE",
+    "YOUR_YOUTUBE",
+    "YOUR_REPO_NAME",
+    "Example Plugin",
+    "Example App",
+    "Your name, forum username",
+    "Describe what users will find in this repository",
+    "URL to any photos",
+    "URL to any video",
+    "Support this project",
+]
+
+pending: list[str] = []
+
+
+def validate_submission_readiness() -> None:
+    """Mirror the CA scan's starter-placeholder check across the shipped files."""
+    print("\n== 6. Community Applications submission readiness ==")
+    shipped = [REPO / "micro.plg", REPO / "ca_profile.xml"]
+    shipped += sorted((REPO / "plugins").glob("*.xml"))
+
+    found: list[str] = []
+    for path in shipped:
+        if not path.is_file():
+            continue
+        text = path.read_text(encoding="utf-8")
+        hits = sorted({m for m in STARTER_MARKERS if m in text})
+        if hits:
+            found.append(f"{path.relative_to(REPO)}: {', '.join(hits)}")
+
+    if found:
+        for entry in found:
+            print(f"       [WAIT] starter placeholder in {entry}")
+        pending.append(
+            "starter placeholder values in the shipped templates "
+            "(CA reports this as \"Starter defaults removed\")"
+        )
+        print("       -> this is what CA's scan flagged; it clears once the forum")
+        print("          support thread exists and set-owner.sh fills in the topic id")
+    else:
+        check(True, "no starter placeholder values remain in the shipped templates")
+
+
 def main() -> int:
     src = load()
     version = entity(src, "microver")
@@ -447,6 +494,7 @@ def main() -> int:
         str(sorted(scripts)),
     )
     validate_docs(attrs.get("pluginURL", ""), version)
+    validate_submission_readiness()
 
     CACHE.mkdir(parents=True, exist_ok=True)
     if not (CACHE / tarball).exists():
@@ -468,8 +516,12 @@ def main() -> int:
     failed = [label for ok, label in results if not ok]
     print("\n" + "=" * 68)
     print(f"{len(results) - len(failed)}/{len(results)} checks passed")
+    if pending:
+        print(f"\n{len(pending)} item(s) still pending before submission:")
+        for item in pending:
+            print(f"  - {item}")
     if failed:
-        print("FAILED:")
+        print("\nFAILED:")
         for label in failed:
             print(f"  - {label}")
         return 1

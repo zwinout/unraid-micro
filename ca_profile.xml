@@ -1,12 +1,12 @@
 <CommunityApplications>
   <Profile>
-Micro for Unraid installs [micro](https://micro-editor.github.io/), a modern and intuitive terminal-based text editor, so it is available in the Unraid web terminal and over SSH.
+Installs [micro](https://micro-editor.github.io/), a modern terminal text editor, so you can edit files straight from the Unraid web terminal or over SSH instead of copying them to another machine.
 
-Edit anything on the server without fighting `vi`: config files under `/boot`, a User Script, a compose file on a share. Upstream micro ships as a single statically linked binary with no dependencies, includes syntax highlighting for 100+ languages, mouse support, multiple cursors and a Lua plugin manager, and follows the familiar Ctrl+S / Ctrl+Q / Ctrl+C / Ctrl+V keybindings.
+Unraid gives you `vi` and nothing friendlier — editing a User Script, a config file under `/boot`, or a compose file on a share usually means fighting `vi` or moving the file elsewhere. micro behaves the way you would expect: `Ctrl+S` saves, `Ctrl+Q` quits, `Ctrl+C` and `Ctrl+V` copy and paste, the mouse works, and syntax highlighting covers 130+ languages. It ships upstream as a single statically linked binary with no dependencies.
 
-The plugin verifies the upstream release archive against its published SHA256 before installing, caches that verified archive on the flash drive so reinstalls work even if GitHub is unreachable, and keeps micro's settings and plugins on the flash drive so they survive a reboot.
+The plugin installs one specific micro release together with its SHA256, verifies the archive against micro's published checksum before installing anything, caches the verified archive on the flash drive so reinstalls work even if GitHub is unreachable, and keeps your settings, keybindings and Lua plugins on the flash drive so they survive a reboot. There is no daemon, and no network access after installation.
 
-Maintained by zwinout. Questions, bug reports and feature requests are welcome in the support thread or on GitHub.
+Maintained by zwinout. Bug reports and feature requests are welcome in the support thread or on GitHub.
   </Profile>
 
   <!-- Repository icon -->
